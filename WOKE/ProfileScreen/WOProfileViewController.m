@@ -132,7 +132,7 @@
 
             if (indexPath.row == 1)
             {
-             cell.textInputMode =
+                [cell.contactTextField setKeyboardType:UIKeyboardTypeNumberPad];
                 cell.contactTextField.text = _appdelegateObj.userObj.phoneNo;
             }
 
