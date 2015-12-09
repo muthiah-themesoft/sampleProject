@@ -224,7 +224,9 @@
         
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [hud removeFromSuperview];
+        [self.view setUserInteractionEnabled:YES];
+
         NSLog(@"[HTTPClient Error]: %@", error.localizedDescription);
         
     }];

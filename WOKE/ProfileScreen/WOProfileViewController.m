@@ -138,9 +138,7 @@
 
             if (indexPath.row == 2)                 cell.contactTextField.text = _appdelegateObj.userObj.userEmail;
 
-            if (indexPath.row == 3)                 cell.contactTextField.text = _appdelegateObj.userObj.officeAddress;
-
-            if (indexPath.row == 4)                 cell.contactTextField.text = _appdelegateObj.userObj.homeAddress;
+        
             return cell;
         }
      
@@ -156,8 +154,22 @@
             }
             cell.contactTitle.text =[contactLabelArry objectAtIndex:indexPath.row];
             cell.contactIcon.image = [UIImage imageNamed:[contactImageArry objectAtIndex:indexPath.row]];
+            if (indexPath.row == 3){
+                cell.address1.tag =103;
+                cell.address2.tag =104;
 
-            cell.backgroundColor =[UIColor clearColor];
+                cell.address1.text = _appdelegateObj.userObj.officeAddress1;
+                cell.address2.text = _appdelegateObj.userObj.officeAddress2;
+            }
+            
+            if (indexPath.row == 4)
+                
+            {cell.address1.tag =105;
+                cell.address2.tag =106;
+                cell.address1.text = _appdelegateObj.userObj.homeAddress1;
+                cell.address2.text = _appdelegateObj.userObj.homeAddress2;
+            }
+                cell.backgroundColor =[UIColor clearColor];
             return cell;
         }
         else{
@@ -278,8 +290,27 @@ if (indexPath.section == 0) {
     if (indexPath.row == 0) self.appdelegateObj.userObj.fullName = textField.text;
     if (indexPath.row == 1) self.appdelegateObj.userObj.phoneNo = textField.text;
     if (indexPath.row == 2) self.appdelegateObj.userObj.userEmail = textField.text;
-    if (indexPath.row == 3) self.appdelegateObj.userObj.officeAddress = textField.text;
-    if (indexPath.row == 4) self.appdelegateObj.userObj.homeAddress  = textField.text;
+    if (indexPath.row == 3)
+    {
+        if (textField.tag==103) {
+            self.appdelegateObj.userObj.officeAddress1 = textField.text;
+        }
+        else
+        {
+            self.appdelegateObj.userObj.officeAddress2 = textField.text;
+
+        }
+    }
+    if (indexPath.row == 4)  {
+        if (textField.tag==105) {
+            self.appdelegateObj.userObj.homeAddress1 = textField.text;
+        }
+        else
+        {
+            self.appdelegateObj.userObj.homeAddress2 = textField.text;
+            
+        }
+    }
 }
 }
 /*
