@@ -9,6 +9,7 @@
 #import "WOProfileViewController.h"
 #import "WOContactTableViewCell.h"
 #import "AppDelegate.h"
+#import "AFHTTPRequestOperation.h"
 @interface WOProfileViewController ()<UITextFieldDelegate, UITextViewDelegate>
 {
     NSArray *contactLabelArry;
@@ -441,8 +442,50 @@ if (indexPath.section == 0) {
                                                                    error:&error];
             
             NSLog(@"LOGIN_SYNC = %@", json);
-            if ((int)[[json objectForKey:@"status"]valueForKey:@"code"]==500) {
+            
+            if ([[[json objectForKey:@"status"]valueForKey:@"code"]integerValue]==500) {
                 
+                NSString *userid =[NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"user_id"]];
+                CGImageRef cgref = [self.appdelegateObj.userObj.profileImage CGImage];
+                CIImage *cim = [self.appdelegateObj.userObj.profileImage CIImage];
+                
+                if (cim == nil && cgref == NULL)
+                {
+                    NSLog(@"no underlying data");
+                }
+                else
+                {
+                NSURL *url = [NSURL URLWithString:@"http://www.creativelabinteractive.com/woke/api/index.php?route=account/updatedp"];
+                AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
+                NSData *imgData= UIImageJPEGRepresentation(self.appdelegateObj.userObj.profileImage,0.0);
+                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        API_KEY,@"client_key",
+                                        userid, @"user_id",
+                                        nil];
+                NSMutableURLRequest *request1 = [httpClient multipartFormRequestWithMethod:@"POST" path:nil parameters:params constructingBodyWithBlock: ^(id <AFMultipartFormData>formData) {
+                    [formData appendPartWithFileData: imgData name:@"image" fileName:@"image.png" mimeType:@"image/png"];
+                }];
+                AFHTTPRequestOperation *operation1 = [[AFHTTPRequestOperation alloc] initWithRequest:request1];
+                [operation1 setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+                    
+                }];
+                [httpClient enqueueHTTPRequestOperation:operation1];
+                
+                [operation1 setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+                    
+                    NSData *JSONData = [operation.responseString dataUsingEncoding:NSUTF8StringEncoding];
+                    NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:JSONData options:NSJSONReadingMutableContainers error:nil];
+                    NSDictionary *status =[jsonObject objectForKey:@"status"];
+                    
+                    
+                }
+                                                  failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                                      NSLog(@"error: %@", operation.responseString);
+                                                      NSLog(@"%@",error);
+                                                  }];
+                [operation1 start];
+                }
+
             }
             else{
                 [self presentAlert:[[json objectForKey:@"status"]valueForKey:@"message"]];

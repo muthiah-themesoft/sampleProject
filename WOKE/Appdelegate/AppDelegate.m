@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-
+#import "AFHTTPRequestOperation.h"
 @interface AppDelegate ()
 
 @end
@@ -17,6 +17,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     _userObj = [[WOUserModel alloc]init];
+    
+  
+
     // Override point for customization after application launch.
     return YES;
 }
