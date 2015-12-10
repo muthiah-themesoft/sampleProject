@@ -20,5 +20,7 @@
 @property (strong,atomic)NSString *fullName;
 @property (strong,atomic)NSString *statusMessage;
 @property (strong,atomic)UIImage  *profileImage;
+@property (strong,atomic)NSString *homeAddressState;
+@property (strong,atomic)NSString *officeAdressState;
 
 @end

@@ -55,7 +55,12 @@
                                                                    error:&error];
             
             NSLog(@"LOGIN_SYNC = %@", json);
-            
+            if ((int)[[json objectForKey:@"status"]valueForKey:@"code"]==500) {
+                
+            }
+            else{
+                [self presentAlert:[[json objectForKey:@"status"]valueForKey:@"message"]];
+            }
             [hud removeFromSuperview];
             [self.view setUserInteractionEnabled:YES];
             
@@ -64,7 +69,8 @@
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             [hud removeFromSuperview];
             [self.view setUserInteractionEnabled:YES];
-            
+            [self presentAlert:error.localizedDescription];
+
             NSLog(@"[HTTPClient Error]: %@", error.localizedDescription);
             
         }];

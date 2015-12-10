@@ -217,7 +217,12 @@
                                                                error:&error];
         
         NSLog(@"LOGIN_SYNC = %@", json);
-        
+        if ((int)[[json objectForKey:@"status"]valueForKey:@"code"]==500) {
+            
+        }
+        else{
+            [self presentAlert:[[json objectForKey:@"status"]valueForKey:@"message"]];
+        }
         [hud removeFromSuperview];
         [self.view setUserInteractionEnabled:YES];
 
@@ -226,9 +231,34 @@
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [hud removeFromSuperview];
         [self.view setUserInteractionEnabled:YES];
+        [self presentAlert:error.localizedDescription];
 
         NSLog(@"[HTTPClient Error]: %@", error.localizedDescription);
         
     }];
+}
+
+-(void)presentAlert:(NSString *)message
+{
+    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"WOKEAPP"
+                                                                               message: message
+                                                                        preferredStyle:UIAlertControllerStyleAlert                   ];
+    
+    //Step 2: Create a UIAlertAction that can be added to the alert
+    UIAlertAction* ok = [UIAlertAction
+                         actionWithTitle:@"OK"
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction * action)
+                         {
+                             //Do some thing here, eg dismiss the alertwindow
+                             [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                             
+                         }];
+    
+    //Step 3: Add the UIAlertAction ok that we just created to our AlertController
+    [myAlertController addAction: ok];
+    
+    //Step 4: Present the alert to the user
+    [self presentViewController:myAlertController animated:YES completion:nil];
 }
 @end

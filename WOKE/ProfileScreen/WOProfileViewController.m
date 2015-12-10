@@ -157,17 +157,22 @@
             if (indexPath.row == 3){
                 cell.address1.tag =103;
                 cell.address2.tag =104;
+                cell.state.tag =102;
 
                 cell.address1.text = _appdelegateObj.userObj.officeAddress1;
                 cell.address2.text = _appdelegateObj.userObj.officeAddress2;
+                cell.state.text = _appdelegateObj.userObj.officeAdressState;
             }
             
             if (indexPath.row == 4)
                 
             {cell.address1.tag =105;
                 cell.address2.tag =106;
+                cell.state.tag =107;
                 cell.address1.text = _appdelegateObj.userObj.homeAddress1;
                 cell.address2.text = _appdelegateObj.userObj.homeAddress2;
+                cell.state.text = _appdelegateObj.userObj.homeAddressState;
+
             }
                 cell.backgroundColor =[UIColor clearColor];
             return cell;
@@ -295,6 +300,9 @@ if (indexPath.section == 0) {
         if (textField.tag==103) {
             self.appdelegateObj.userObj.officeAddress1 = textField.text;
         }
+        else if (textField.tag==102) {
+            self.appdelegateObj.userObj.officeAdressState = textField.text;
+        }
         else
         {
             self.appdelegateObj.userObj.officeAddress2 = textField.text;
@@ -304,6 +312,11 @@ if (indexPath.section == 0) {
     if (indexPath.row == 4)  {
         if (textField.tag==105) {
             self.appdelegateObj.userObj.homeAddress1 = textField.text;
+        }
+        else if ((textField.tag==107))
+        {
+            self.appdelegateObj.userObj.homeAddressState = textField.text;
+
         }
         else
         {
@@ -384,6 +397,99 @@ if (indexPath.section == 0) {
 }
 
 - (IBAction)doneAction:(id)sender {
+    if (self.appdelegateObj.userObj.fullName.length>0) {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.mode = MBProgressHUDModeIndeterminate;
+        hud.labelText = @"Loading";
+        
+        [self.view addSubview:hud];
+        [self.view setUserInteractionEnabled:NO];
+        
+        NSURL *url = [NSURL URLWithString:@"http://www.creativelabinteractive.com/woke/api/index.php?route=account/signup"];
+        AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
+        
+        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                API_KEY,@"client_key",
+                                [self.appdelegateObj.userObj.fullName empty], @"username",
+                                @"fffff",@"device_id",
+                                [self.appdelegateObj.userObj.userEmail empty],@"email",
+                                @"",@"first_name",
+                                @"",@"last_name",
+                                [self.appdelegateObj.userObj.passWord empty],@"password",
+                                [self.appdelegateObj.userObj.userEmail empty],@"mobile_no",
+                                @"",@"home_no",
+                                @"", @"office_no",
+                                [self.appdelegateObj.userObj.homeAddress1 empty],@"home_address",
+                                [self.appdelegateObj.userObj.officeAddress1 empty],@"office_address",
+                                [self.appdelegateObj.userObj.homeAddressState empty],@"home_address_state",
+                                [self.appdelegateObj.userObj.homeAddress2 empty], @"home_address_city",
+                                @"",@"home_address_zip",
+                                @"",@"emergency_contact",
+                                @"", @"profile_photo_path",
+                                [self.appdelegateObj.userObj.statusMessage empty],@"status_update",
+                                @"", @"phone_model",
+                                @"",@"MNC",
+                                @"",  @"MCC",
+                                @"", @"os_version",
+                                nil];
+        
+        [httpClient postPath:@"" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSError* error;
+            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:responseObject
+                                                                 options:kNilOptions
+                                                                   error:&error];
+            
+            NSLog(@"LOGIN_SYNC = %@", json);
+            if ((int)[[json objectForKey:@"status"]valueForKey:@"code"]==500) {
+                
+            }
+            else{
+                [self presentAlert:[[json objectForKey:@"status"]valueForKey:@"message"]];
+            }
+            
+            [hud removeFromSuperview];
+            [self.view setUserInteractionEnabled:YES];
+            
+            
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            [hud removeFromSuperview];
+            [self.view setUserInteractionEnabled:YES];
+            [self presentAlert:error.localizedDescription];
+
+            NSLog(@"[HTTPClient Error]: %@", error.localizedDescription);
+            
+        }];
+
+    }
+    else
+    [self presentAlert:@"Please enter the full Name!"];
     
 }
+        
+        -(void)presentAlert:(NSString *)message
+        {
+            UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"WOKEAPP"
+                                                                                       message: message
+                                                                                preferredStyle:UIAlertControllerStyleAlert                   ];
+            
+            //Step 2: Create a UIAlertAction that can be added to the alert
+            UIAlertAction* ok = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     //Do some thing here, eg dismiss the alertwindow
+                                     [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                     
+                                 }];
+            
+            //Step 3: Add the UIAlertAction ok that we just created to our AlertController
+            [myAlertController addAction: ok];
+            
+            //Step 4: Present the alert to the user
+            [self presentViewController:myAlertController animated:YES completion:nil];
+        }
+
 @end

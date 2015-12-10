@@ -10,4 +10,5 @@
 
 @interface NSString (emailValidation)
 - (BOOL)isValidEmail;
+-(NSString *) empty;
 @end

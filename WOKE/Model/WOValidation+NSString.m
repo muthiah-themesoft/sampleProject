@@ -18,4 +18,11 @@
     NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
     return [emailTest evaluateWithObject:self];
 }
+
+-(NSString *) empty{
+    if (([[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]length] == 0)) {
+        return @"";
+    }
+    return self;
+}
 @end
