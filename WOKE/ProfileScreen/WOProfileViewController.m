@@ -451,6 +451,7 @@ if (indexPath.section == 0) {
                 
                 if (cim == nil && cgref == NULL)
                 {
+                    [self performSegueWithIdentifier:@"showGetStartedMatesView" sender:nil];
                     NSLog(@"no underlying data");
                 }
                 else
@@ -476,12 +477,17 @@ if (indexPath.section == 0) {
                     NSData *JSONData = [operation.responseString dataUsingEncoding:NSUTF8StringEncoding];
                     NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:JSONData options:NSJSONReadingMutableContainers error:nil];
                     NSDictionary *status =[jsonObject objectForKey:@"status"];
+                    [self performSegueWithIdentifier:@"showGetStartedMatesView" sender:nil];
+
                     
                     
                 }
                                                   failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                                       NSLog(@"error: %@", operation.responseString);
                                                       NSLog(@"%@",error);
+                                                      
+                                                      [self presentAlert:error.localizedDescription];
+
                                                   }];
                 [operation1 start];
                 }
