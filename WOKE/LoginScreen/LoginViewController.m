@@ -7,7 +7,8 @@
 //
 
 #import "LoginViewController.h"
-
+#import "AppDelegate.h"
+#import "WOProfileViewController.h"
 @interface LoginViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *userNameTxt;
 @property (weak, nonatomic) IBOutlet UITextField *passWordTxt;
@@ -38,7 +39,7 @@
     CGFloat borderWidth1 = 1;
     border1.borderColor = [UIColor lightGrayColor].CGColor;
     border1.frame = CGRectMake(0, _passWordTxt.frame.size.height - borderWidth1, _passWordTxt.frame.size.width, _passWordTxt.frame.size.height);
-    border1.borderWidth = borderWidth;
+    border1.borderWidth = borderWidth1;
     [_passWordTxt.layer addSublayer:border1];
     _passWordTxt.layer.masksToBounds = YES;
 
@@ -60,7 +61,7 @@
     }
     else if (self.view.frame.origin.y < 0)
     {
-//        [self setViewMovedUp:NO withTextfield:self.currentTextfield];
+       [self setViewMovedUp:NO withTextfield:self.currentTextfield];
     }
 }
 
@@ -71,7 +72,8 @@
     }
     else if (self.view.frame.origin.y < 0)
     {
-        [self setViewMovedUp:NO withTextfield:self.currentTextfield];
+         [self setViewMovedUp:NO withTextfield:self.currentTextfield];
+
     }
 }
 
@@ -83,7 +85,7 @@
         //move the main view, so that the keyboard does not hide it.
         if  (self.view.frame.origin.y >= 0)
         {
-            [self setViewMovedUp:YES withTextfield:self.currentTextfield];
+           // [self setViewMovedUp:YES withTextfield:self.currentTextfield];
         }
     }
 
@@ -133,15 +135,15 @@
 {
     [super viewWillAppear:animated];
     // register for keyboard notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(keyboardWillShow)
+//                                                 name:UIKeyboardWillShowNotification
+//                                               object:nil];
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(keyboardWillHide)
+//                                                 name:UIKeyboardWillHideNotification
+//                                               object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -156,18 +158,24 @@
                                                     name:UIKeyboardWillHideNotification
                                                   object:nil];
 }
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
+    if ([segue.identifier isEqualToString:@"sucessLogin"]) {
+        AppDelegate* appdelegateObj = (AppDelegate*)[[UIApplication sharedApplication]delegate];
+
+        appdelegateObj.isupdateProfile =YES;
+    }
     // Pass the selected object to the new view controller.
 }
-*/
+
 
 - (IBAction)loginButtonClicked:(UIButton *)sender {
     
+    [_userNameTxt resignFirstResponder];
+    [_passWordTxt resignFirstResponder];
 
 //    if(![MGUtilities hasInternetConnection]) {
 //        UIColor* color = [THEME_MAIN_COLOR colorWithAlphaComponent:0.70];
@@ -184,59 +192,94 @@
     NSString* password = [_passWordTxt text];
     
     if(username.length == 0 || password.length == 0) {
-        
+        [self presentAlert:@"Please enter the Email and Password."];
+
 //        [MGUtilities showAlertTitle:LOCALIZED(@"Login Error")
 //                            message:LOCALIZED(@"Username and Password field are required.")];
         return;
     }
-    
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.mode = MBProgressHUDModeIndeterminate;
-    hud.labelText = @"Loading";
-    
-    [self.view addSubview:hud];
-    [self.view setUserInteractionEnabled:NO];
-    
-    NSURL *url = [NSURL URLWithString:@"http://www.creativelabinteractive.com/woke/api/index.php?route=account/login"];
-    AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
-    
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                            API_KEY,@"client_key",
-                            _userNameTxt.text, @"username",
-                            _passWordTxt.text, @"password",
-                            @"fffff",@"device_id",
-                            
-                            nil];
-    
-    [httpClient postPath:@"" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    if ([username isValidEmail]) {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.mode = MBProgressHUDModeIndeterminate;
+        hud.labelText = @"Loading";
         
-        NSError* error;
-        NSDictionary* json = [NSJSONSerialization JSONObjectWithData:responseObject
-                                                             options:kNilOptions
-                                                               error:&error];
+        [self.view addSubview:hud];
+        [self.view setUserInteractionEnabled:NO];
         
-        NSLog(@"LOGIN_SYNC = %@", json);
-        if ((int)[[json objectForKey:@"status"]valueForKey:@"code"]==500) {
+        NSURL *url = [NSURL URLWithString:@"http://www.creativelabinteractive.com/woke/api/index.php?route=account/login"];
+        AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
+        
+        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                API_KEY,@"client_key",
+                                _userNameTxt.text, @"email",
+                                _passWordTxt.text, @"password",
+                                @"fffff",@"device_id",
+                                
+                                nil];
+        
+        [httpClient postPath:@"" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
-        }
-        else{
-            [self presentAlert:[[json objectForKey:@"status"]valueForKey:@"message"]];
-        }
-        [hud removeFromSuperview];
-        [self.view setUserInteractionEnabled:YES];
+            NSError* error;
+            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:responseObject
+                                                                 options:kNilOptions
+                                                                   error:&error];
+            
+            NSLog(@"LOGIN_SYNC = %@", json);
+            if ([[[json objectForKey:@"status"]valueForKey:@"code"]integerValue]==505) {
+                AppDelegate* appdelegateObj = (AppDelegate*)[[UIApplication sharedApplication]delegate];
+                appdelegateObj.userObj.userEmail =  _userNameTxt.text;
 
-        
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [hud removeFromSuperview];
-        [self.view setUserInteractionEnabled:YES];
-        [self presentAlert:error.localizedDescription];
+              appdelegateObj.userObj.fullName =  [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"first_name"]];
+             appdelegateObj.userObj.homeAddress1=   [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"home_address"]];
 
-        NSLog(@"[HTTPClient Error]: %@", error.localizedDescription);
-        
-    }];
-}
+             appdelegateObj.userObj.homeAddress2 =   [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"home_address_city"]];
+
+             appdelegateObj.userObj.homeAddressState =   [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"home_address_state"]];
+
+                [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"home_address_zip"]];
+
+             appdelegateObj.userObj.statusMessage =   [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"last_status"]];
+                ;
+             appdelegateObj.userObj.phoneNo =   [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"mobile_no"]];
+
+               appdelegateObj.userObj.officeAddress1 = [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"office_address"]];
+
+
+              appdelegateObj.userObj.profilePath = [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"profile_photo_path"]];
+                ;
+               appdelegateObj.userObj.userid = [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"user_id"]];
+
+               
+
+                
+                
+                [self performSegueWithIdentifier:@"sucessLogin" sender:nil];
+            }
+            else{
+                [self presentAlert:[[json objectForKey:@"status"]valueForKey:@"message"]];
+            }
+            [hud removeFromSuperview];
+            [self.view setUserInteractionEnabled:YES];
+            
+            
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            [hud removeFromSuperview];
+            [self.view setUserInteractionEnabled:YES];
+            [self presentAlert:error.localizedDescription];
+            
+            NSLog(@"[HTTPClient Error]: %@", error.localizedDescription);
+            
+        }];
+
+    }
+    else
+    {
+        [self presentAlert:@"Please enter a valid Email!"];
+
+    }
+    
+   }
 
 -(void)presentAlert:(NSString *)message
 {

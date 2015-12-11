@@ -10,5 +10,5 @@
 #import "FDTakeController.h"
 @interface WOProfileViewController : UIViewController
 @property FDTakeController *takeController;
-
+@property(nonatomic,readwrite)BOOL isupdateProfile;
 @end

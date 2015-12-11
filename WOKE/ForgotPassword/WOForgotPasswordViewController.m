@@ -43,7 +43,7 @@
         
         NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                                 API_KEY,@"client_key",
-                                username, @"username",
+                                username, @"email",
                                 @"fffff",@"device_id",
                                 nil];
         

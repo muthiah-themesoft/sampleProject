@@ -109,8 +109,17 @@
     return 5;    //count number of row from counting array hear cataGorry is An Array
 }
 
+-(void)viewWillAppear:(BOOL)animated{
 
-
+    AppDelegate* appdelegateObj = (AppDelegate*)[[UIApplication sharedApplication]delegate];
+    self.isupdateProfile = appdelegateObj.isupdateProfile;
+    
+}
+-(void)viewWillDisappear:(BOOL)animated
+{
+    AppDelegate* appdelegateObj = (AppDelegate*)[[UIApplication sharedApplication]delegate];
+    self.isupdateProfile=appdelegateObj.isupdateProfile =NO;
+}
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -197,7 +206,11 @@
                 [cell.profileImage setBackgroundImage:self.appdelegateObj.userObj.profileImage forState:UIControlStateNormal];
                 cell.profileImage.layer.cornerRadius = 30;
                 cell.profileImage.layer.masksToBounds = YES;
+                
+                
             }
+            
+    
             cell.phoneNoLabel.text =@"000-000-000";
      cell.statusMessage.text=self.appdelegateObj.userObj.statusMessage;
        cell.nameTextField.text = _appdelegateObj.userObj.fullName;
@@ -398,122 +411,262 @@ if (indexPath.section == 0) {
 }
 
 - (IBAction)doneAction:(id)sender {
-    if (self.appdelegateObj.userObj.fullName.length>0) {
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.mode = MBProgressHUDModeIndeterminate;
-        hud.labelText = @"Loading";
+    
+    
+    if (_isupdateProfile) {
         
-        [self.view addSubview:hud];
-        [self.view setUserInteractionEnabled:NO];
-        
-        NSURL *url = [NSURL URLWithString:@"http://www.creativelabinteractive.com/woke/api/index.php?route=account/signup"];
-        AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
-        
-        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                API_KEY,@"client_key",
-                                [self.appdelegateObj.userObj.fullName empty], @"username",
-                                @"fffff",@"device_id",
-                                [self.appdelegateObj.userObj.userEmail empty],@"email",
-                                @"",@"first_name",
-                                @"",@"last_name",
-                                [self.appdelegateObj.userObj.passWord empty],@"password",
-                                [self.appdelegateObj.userObj.userEmail empty],@"mobile_no",
-                                @"",@"home_no",
-                                @"", @"office_no",
-                                [self.appdelegateObj.userObj.homeAddress1 empty],@"home_address",
-                                [self.appdelegateObj.userObj.officeAddress1 empty],@"office_address",
-                                [self.appdelegateObj.userObj.homeAddressState empty],@"home_address_state",
-                                [self.appdelegateObj.userObj.homeAddress2 empty], @"home_address_city",
-                                @"",@"home_address_zip",
-                                @"",@"emergency_contact",
-                                @"", @"profile_photo_path",
-                                [self.appdelegateObj.userObj.statusMessage empty],@"status_update",
-                                @"", @"phone_model",
-                                @"",@"MNC",
-                                @"",  @"MCC",
-                                @"", @"os_version",
-                                nil];
-        
-        [httpClient postPath:@"" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if (self.appdelegateObj.userObj.fullName.length>0) {
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            hud.mode = MBProgressHUDModeIndeterminate;
+            hud.labelText = @"Loading";
             
-            NSError* error;
-            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:responseObject
-                                                                 options:kNilOptions
-                                                                   error:&error];
+            [self.view addSubview:hud];
+            [self.view setUserInteractionEnabled:NO];
             
-            NSLog(@"LOGIN_SYNC = %@", json);
+            NSURL *url = [NSURL URLWithString:@"http://www.creativelabinteractive.com/woke/api/index.php?route=account/update"];
+            AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
             
-            if ([[[json objectForKey:@"status"]valueForKey:@"code"]integerValue]==500) {
+            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    API_KEY,@"client_key",
+                                    @"", @"username",
+                                    @"fffff",@"device_id",
+                                    [self.appdelegateObj.userObj.userid empty] ,@"user_id",
+                                    [self.appdelegateObj.userObj.userEmail empty],@"email",
+                                    [self.appdelegateObj.userObj.fullName empty],@"first_name",
+                                    @"",@"last_name",
+                                    [self.appdelegateObj.userObj.phoneNo empty],@"mobile_no",
+                                    @"",@"home_no",
+                                    @"", @"office_no",
+                                    [self.appdelegateObj.userObj.homeAddress1 empty],@"home_address",
+                                    [self.appdelegateObj.userObj.officeAddress1 empty],@"office_address",
+                                    [self.appdelegateObj.userObj.homeAddressState empty],@"home_address_state",
+                                    [self.appdelegateObj.userObj.homeAddress2 empty], @"home_address_city",
+                                    [self.appdelegateObj.userObj.officeAdressState empty],@"office_address_state",
+                                    [self.appdelegateObj.userObj.officeAddress2 empty], @"home_address_city",
+                                    @"",@"home_address_zip",
+                                    @"",@"emergency_contact",
+                                    @"", @"profile_photo_path",
+                                    [self.appdelegateObj.userObj.statusMessage empty],@"status_update",
+                                    @"", @"phone_model",
+                                    @"",@"MNC",
+                                    @"",  @"MCC",
+                                    @"", @"os_version",
+                                    
+                                    nil];
+            
+            [httpClient postPath:@"" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 
-                NSString *userid =[NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"user_id"]];
-                CGImageRef cgref = [self.appdelegateObj.userObj.profileImage CGImage];
-                CIImage *cim = [self.appdelegateObj.userObj.profileImage CIImage];
+                NSError* error;
+                NSDictionary* json = [NSJSONSerialization JSONObjectWithData:responseObject
+                                                                     options:kNilOptions
+                                                                       error:&error];
                 
-                if (cim == nil && cgref == NULL)
-                {
-                    [self performSegueWithIdentifier:@"showGetStartedMatesView" sender:nil];
-                    NSLog(@"no underlying data");
-                }
-                else
-                {
-                NSURL *url = [NSURL URLWithString:@"http://www.creativelabinteractive.com/woke/api/index.php?route=account/updatedp"];
-                AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
-                NSData *imgData= UIImageJPEGRepresentation(self.appdelegateObj.userObj.profileImage,0.0);
-                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        API_KEY,@"client_key",
-                                        userid, @"user_id",
-                                        nil];
-                NSMutableURLRequest *request1 = [httpClient multipartFormRequestWithMethod:@"POST" path:nil parameters:params constructingBodyWithBlock: ^(id <AFMultipartFormData>formData) {
-                    [formData appendPartWithFileData: imgData name:@"image" fileName:@"image.png" mimeType:@"image/png"];
-                }];
-                AFHTTPRequestOperation *operation1 = [[AFHTTPRequestOperation alloc] initWithRequest:request1];
-                [operation1 setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-                    
-                }];
-                [httpClient enqueueHTTPRequestOperation:operation1];
+                NSLog(@"LOGIN_SYNC = %@", json);
                 
-                [operation1 setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+                if ([[[json objectForKey:@"status"]valueForKey:@"code"]integerValue]==500) {
                     
-                    NSData *JSONData = [operation.responseString dataUsingEncoding:NSUTF8StringEncoding];
-                    NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:JSONData options:NSJSONReadingMutableContainers error:nil];
-                    NSDictionary *status =[jsonObject objectForKey:@"status"];
-                    [self performSegueWithIdentifier:@"showGetStartedMatesView" sender:nil];
-
+                    NSString *userid =[NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"user_id"]];
+                    CGImageRef cgref = [self.appdelegateObj.userObj.profileImage CGImage];
+                    CIImage *cim = [self.appdelegateObj.userObj.profileImage CIImage];
                     
+                    if (cim == nil && cgref == NULL)
+                    {
+                        [hud removeFromSuperview];
+                        [self.view setUserInteractionEnabled:YES];
+                        [self performSegueWithIdentifier:@"showGetStartedMatesView" sender:nil];
+                        NSLog(@"no underlying data");
+                    }
+                    else
+                    {
+                        NSURL *url = [NSURL URLWithString:@"http://www.creativelabinteractive.com/woke/api/index.php?route=account/updatedp"];
+                        AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
+                        NSData *imgData= UIImageJPEGRepresentation(self.appdelegateObj.userObj.profileImage,0.0);
+                        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                API_KEY,@"client_key",
+                                                [self.appdelegateObj.userObj.userid empty], @"user_id",
+                                                nil];
+                        NSMutableURLRequest *request1 = [httpClient multipartFormRequestWithMethod:@"POST" path:nil parameters:params constructingBodyWithBlock: ^(id <AFMultipartFormData>formData) {
+                            [formData appendPartWithFileData: imgData name:@"image" fileName:@"image.png" mimeType:@"image/png"];
+                        }];
+                        AFHTTPRequestOperation *operation1 = [[AFHTTPRequestOperation alloc] initWithRequest:request1];
+                        [operation1 setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+                            
+                        }];
+                        [httpClient enqueueHTTPRequestOperation:operation1];
+                        
+                        [operation1 setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+                            
+                            NSData *JSONData = [operation.responseString dataUsingEncoding:NSUTF8StringEncoding];
+                            NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:JSONData options:NSJSONReadingMutableContainers error:nil];
+                            NSDictionary *status =[jsonObject objectForKey:@"status"];
+                            [self performSegueWithIdentifier:@"showGetStartedMatesView" sender:nil];
+                            
+                            [hud removeFromSuperview];
+                            [self.view setUserInteractionEnabled:YES];
+                            
+                        }
+                                                          failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                                              NSLog(@"error: %@", operation.responseString);
+                                                              NSLog(@"%@",error);
+                                                              [hud removeFromSuperview];
+                                                              [self.view setUserInteractionEnabled:YES];
+                                                              [self presentAlert:error.localizedDescription];
+                                                              
+                                                          }];
+                        [operation1 start];
+                    }
                     
                 }
-                                                  failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                                      NSLog(@"error: %@", operation.responseString);
-                                                      NSLog(@"%@",error);
-                                                      
-                                                      [self presentAlert:error.localizedDescription];
-
-                                                  }];
-                [operation1 start];
+                else{
+                    [self presentAlert:[[json objectForKey:@"status"]valueForKey:@"message"]];
+                    [hud removeFromSuperview];
+                    [self.view setUserInteractionEnabled:YES];
                 }
-
-            }
-            else{
-                [self presentAlert:[[json objectForKey:@"status"]valueForKey:@"message"]];
-            }
+                
+                
+                
+                
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                [hud removeFromSuperview];
+                [self.view setUserInteractionEnabled:YES];
+                [self presentAlert:error.localizedDescription];
+                
+                NSLog(@"[HTTPClient Error]: %@", error.localizedDescription);
+                
+            }];
             
-            [hud removeFromSuperview];
-            [self.view setUserInteractionEnabled:YES];
-            
-            
-            
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [hud removeFromSuperview];
-            [self.view setUserInteractionEnabled:YES];
-            [self presentAlert:error.localizedDescription];
-
-            NSLog(@"[HTTPClient Error]: %@", error.localizedDescription);
-            
-        }];
-
+        }
+        else
+            [self presentAlert:@"Please enter the full Name!"];
     }
-    else
-    [self presentAlert:@"Please enter the full Name!"];
+    else{
+    
+    
+        if (self.appdelegateObj.userObj.fullName.length>0) {
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            hud.mode = MBProgressHUDModeIndeterminate;
+            hud.labelText = @"Loading";
+            
+            [self.view addSubview:hud];
+            [self.view setUserInteractionEnabled:NO];
+            
+            NSURL *url = [NSURL URLWithString:@"http://www.creativelabinteractive.com/woke/api/index.php?route=account/signup"];
+            AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
+            
+            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    API_KEY,@"client_key",
+                                    @"", @"username",
+                                    @"fffff",@"device_id",
+                                    [self.appdelegateObj.userObj.userEmail empty],@"email",
+                                    [self.appdelegateObj.userObj.fullName empty],@"first_name",
+                                    @"",@"last_name",
+                                    [self.appdelegateObj.userObj.passWord empty],@"password",
+                                    [self.appdelegateObj.userObj.phoneNo empty],@"mobile_no",
+                                    @"",@"home_no",
+                                    @"", @"office_no",
+                                    [self.appdelegateObj.userObj.homeAddress1 empty],@"home_address",
+                                    [self.appdelegateObj.userObj.officeAddress1 empty],@"office_address",
+                                    [self.appdelegateObj.userObj.homeAddressState empty],@"home_address_state",
+                                    [self.appdelegateObj.userObj.homeAddress2 empty], @"home_address_city",
+                                    [self.appdelegateObj.userObj.officeAdressState empty],@"office_address_state",
+                                    [self.appdelegateObj.userObj.officeAddress2 empty], @"home_address_city",
+                                    @"",@"home_address_zip",
+                                    @"",@"emergency_contact",
+                                    @"", @"profile_photo_path",
+                                    [self.appdelegateObj.userObj.statusMessage empty],@"status_update",
+                                    @"", @"phone_model",
+                                    @"",@"MNC",
+                                    @"",  @"MCC",
+                                    @"", @"os_version",
+                                    nil];
+            
+            [httpClient postPath:@"" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                
+                NSError* error;
+                NSDictionary* json = [NSJSONSerialization JSONObjectWithData:responseObject
+                                                                     options:kNilOptions
+                                                                       error:&error];
+                
+                NSLog(@"LOGIN_SYNC = %@", json);
+                
+                if ([[[json objectForKey:@"status"]valueForKey:@"code"]integerValue]==500) {
+                    
+                    NSString *userid =[NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"user_id"]];
+                    CGImageRef cgref = [self.appdelegateObj.userObj.profileImage CGImage];
+                    CIImage *cim = [self.appdelegateObj.userObj.profileImage CIImage];
+                    _isupdateProfile=YES;
+                    if (cim == nil && cgref == NULL)
+                    {
+                        [hud removeFromSuperview];
+                        [self.view setUserInteractionEnabled:YES];
+                        [self performSegueWithIdentifier:@"showGetStartedMatesView" sender:nil];
+                        NSLog(@"no underlying data");
+                    }
+                    else
+                    {
+                        NSURL *url = [NSURL URLWithString:@"http://www.creativelabinteractive.com/woke/api/index.php?route=account/updatedp"];
+                        AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
+                        NSData *imgData= UIImageJPEGRepresentation(self.appdelegateObj.userObj.profileImage,0.0);
+                        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                API_KEY,@"client_key",
+                                                userid, @"user_id",
+                                                nil];
+                        NSMutableURLRequest *request1 = [httpClient multipartFormRequestWithMethod:@"POST" path:nil parameters:params constructingBodyWithBlock: ^(id <AFMultipartFormData>formData) {
+                            [formData appendPartWithFileData: imgData name:@"image" fileName:@"image.png" mimeType:@"image/png"];
+                        }];
+                        AFHTTPRequestOperation *operation1 = [[AFHTTPRequestOperation alloc] initWithRequest:request1];
+                        [operation1 setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+                            
+                        }];
+                        [httpClient enqueueHTTPRequestOperation:operation1];
+                        
+                        [operation1 setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+                            
+                            NSData *JSONData = [operation.responseString dataUsingEncoding:NSUTF8StringEncoding];
+                            NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:JSONData options:NSJSONReadingMutableContainers error:nil];
+                            NSDictionary *status =[jsonObject objectForKey:@"status"];
+                            [self performSegueWithIdentifier:@"showGetStartedMatesView" sender:nil];
+                            
+                            [hud removeFromSuperview];
+                            [self.view setUserInteractionEnabled:YES];
+                            
+                        }
+                                                          failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                                              NSLog(@"error: %@", operation.responseString);
+                                                              NSLog(@"%@",error);
+                                                              [hud removeFromSuperview];
+                                                              [self.view setUserInteractionEnabled:YES];
+                                                              [self presentAlert:error.localizedDescription];
+                                                              
+                                                          }];
+                        [operation1 start];
+                    }
+                    
+                }
+                else{
+                    [hud removeFromSuperview];
+                    [self.view setUserInteractionEnabled:YES];
+                    [self presentAlert:[[json objectForKey:@"status"]valueForKey:@"message"]];
+                }
+                
+                
+                
+                
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                [hud removeFromSuperview];
+                [self.view setUserInteractionEnabled:YES];
+                [self presentAlert:error.localizedDescription];
+                
+                NSLog(@"[HTTPClient Error]: %@", error.localizedDescription);
+                
+            }];
+            
+        }
+        else
+            [self presentAlert:@"Please enter the full Name!"];
+    }
     
 }
         

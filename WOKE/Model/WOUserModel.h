@@ -22,5 +22,7 @@
 @property (strong,atomic)UIImage  *profileImage;
 @property (strong,atomic)NSString *homeAddressState;
 @property (strong,atomic)NSString *officeAdressState;
+@property (strong,atomic)NSString *profilePath;
+@property (strong,atomic)NSString *userid;
 
 @end

@@ -12,6 +12,7 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) WOUserModel *userObj;
+@property(nonatomic,readwrite)BOOL isupdateProfile;
 
 @end
 
