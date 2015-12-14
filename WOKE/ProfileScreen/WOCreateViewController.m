@@ -172,10 +172,11 @@
 - (IBAction)loginButtonClicked:(UIButton *)sender {
     
     
+    AppDelegate* appdelegateObj = (AppDelegate*)[[UIApplication sharedApplication]delegate];
+    appdelegateObj.isupdateProfile =NO;
 
     NSString* username = [_userNameTxt text];
     NSString* password = [_passWordTxt text];
-    AppDelegate* appdelegateObj = (AppDelegate*)[[UIApplication sharedApplication]delegate];
 
     if(username.length == 0 || password.length == 0) {
         [self presentAlert:@"Please enter the Email and Password."];
@@ -189,6 +190,7 @@
     else
     {
         [self performSegueWithIdentifier:@"showGetStartedView" sender:nil];
+        appdelegateObj.userObj =[[WOUserModel alloc]init];
         appdelegateObj.userObj.userEmail =username;
         appdelegateObj.userObj.passWord = password;
 

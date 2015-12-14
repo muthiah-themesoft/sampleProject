@@ -591,7 +591,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="WOKE_BACKGROUND" translatesAutoresizingMaskIntoConstraints="NO" id="MTz-M2-0Y6">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="WOKE_BACKGROUND" translatesAutoresizingMaskIntoConstraints="NO" id="MTz-M2-0Y6">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vJI-r8-iha">
@@ -780,10 +780,10 @@
                                 <exclude reference="uHL-zC-cFb"/>
                                 <exclude reference="CP3-Oc-Uaa"/>
                                 <exclude reference="liV-bk-ROQ"/>
-                                <exclude reference="Wur-QX-TNp"/>
-                                <exclude reference="ofL-XG-EEM"/>
                                 <exclude reference="eGc-qU-H4T"/>
                                 <exclude reference="h6o-Yf-yHI"/>
+                                <exclude reference="Wur-QX-TNp"/>
+                                <exclude reference="ofL-XG-EEM"/>
                                 <exclude reference="V9n-PO-spQ"/>
                                 <exclude reference="fKj-M2-zBG"/>
                                 <exclude reference="onR-VX-7pO"/>
@@ -801,10 +801,10 @@
                                 <include reference="uHL-zC-cFb"/>
                                 <include reference="CP3-Oc-Uaa"/>
                                 <include reference="liV-bk-ROQ"/>
-                                <include reference="Wur-QX-TNp"/>
-                                <include reference="ofL-XG-EEM"/>
                                 <include reference="eGc-qU-H4T"/>
                                 <include reference="h6o-Yf-yHI"/>
+                                <include reference="Wur-QX-TNp"/>
+                                <include reference="ofL-XG-EEM"/>
                                 <include reference="V9n-PO-spQ"/>
                                 <include reference="fKj-M2-zBG"/>
                                 <include reference="onR-VX-7pO"/>
@@ -1170,7 +1170,7 @@
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                         <variation key="widthClass=compact" fixedFrame="YES">
-                                            <rect key="frame" x="-88" y="-17" width="0.0" height="0.0"/>
+                                            <rect key="frame" x="-44" y="-48" width="0.0" height="0.0"/>
                                         </variation>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Profile" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yNj-oa-1jG">
@@ -2798,7 +2798,7 @@
         <image name="email1" width="203" height="203"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="OJF-E7-b8H"/>
+        <segue reference="wbb-3O-IGC"/>
         <segue reference="9jp-2z-swh"/>
         <segue reference="X7w-mI-I81"/>
     </inferredMetricsTieBreakers>

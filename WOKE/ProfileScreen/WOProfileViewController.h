@@ -11,4 +11,6 @@
 @interface WOProfileViewController : UIViewController
 @property FDTakeController *takeController;
 @property(nonatomic,readwrite)BOOL isupdateProfile;
+@property(nonatomic,readwrite)BOOL isDownloaded;
+
 @end

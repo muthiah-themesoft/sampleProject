@@ -10,6 +10,8 @@
 
 @interface WOContactTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *contactIcon;
+@property (weak, nonatomic)  UIImageView *profileImageView;
+
 @property (weak, nonatomic) IBOutlet UILabel *contactTitle;
 @property (weak, nonatomic) IBOutlet UILabel *phoneNoLabel;
 @property (weak, nonatomic) IBOutlet UITextField *address2;

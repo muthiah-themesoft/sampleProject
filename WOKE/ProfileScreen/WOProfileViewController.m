@@ -9,6 +9,7 @@
 #import "WOProfileViewController.h"
 #import "WOContactTableViewCell.h"
 #import "AppDelegate.h"
+#import "UIImageView+AFNetworking.h"
 #import "AFHTTPRequestOperation.h"
 @interface WOProfileViewController ()<UITextFieldDelegate, UITextViewDelegate>
 {
@@ -17,6 +18,7 @@
 
 }
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
+@property (strong, nonatomic)  UITextField *currentField;
 
 @property (weak, nonatomic) IBOutlet UIButton *profileImage;
 
@@ -63,12 +65,14 @@
 }
 - (IBAction)addProfile:(UIButton *)sender {
     _profileImageButton = sender;
+    [_currentField resignFirstResponder];
     [self.takeController takePhotoOrChooseFromLibrary];
 
 }
 
 - (void)takeController:(FDTakeController *)controller gotPhoto:(UIImage *)photo withInfo:(NSDictionary *)info
 {
+    
     [_profileImageButton setBackgroundImage:photo forState:UIControlStateNormal];
     _profileImageButton.layer.cornerRadius = 30;
    _profileImageButton.layer.masksToBounds = YES;
@@ -117,8 +121,6 @@
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
-    AppDelegate* appdelegateObj = (AppDelegate*)[[UIApplication sharedApplication]delegate];
-    self.isupdateProfile=appdelegateObj.isupdateProfile =NO;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -206,8 +208,34 @@
                 [cell.profileImage setBackgroundImage:self.appdelegateObj.userObj.profileImage forState:UIControlStateNormal];
                 cell.profileImage.layer.cornerRadius = 30;
                 cell.profileImage.layer.masksToBounds = YES;
-                
-                
+            }
+            else
+            {
+            
+                if (self.appdelegateObj.userObj.profilePath!=nil && [self.appdelegateObj.userObj.profilePath containsString:@"png"] && !_isDownloaded) {
+                    NSURL *url = [NSURL URLWithString:self.appdelegateObj.userObj.profilePath];
+                    NSData *data = [NSData dataWithContentsOfURL:url];
+                    UIImage *img = [[UIImage alloc] initWithData:data];
+                    [cell.profileImage setBackgroundImage:img forState:UIControlStateNormal];
+                    cell.profileImageView.image = img;
+                    cell.profileImage.layer.cornerRadius = 30;
+                    cell.profileImage.layer.masksToBounds = YES;
+                    _isDownloaded=YES;
+                }
+              
+//                __weak UITableViewCell *weakCell = cell;
+//                [cell.profileImageView setImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.appdelegateObj.userObj.profilePath]] placeholderImage:nil success:^(NSURLRequest *request,   NSHTTPURLResponse *response, UIImage *image) {
+//                    if (weakCell)
+//                    {
+//                        weakCell.imageView.image = image;
+//                        [cell.profileImage setBackgroundImage:image forState:UIControlStateNormal];
+//                        [weakCell setNeedsLayout];
+//                    }
+//                } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+//                    NSLog(@"Error: %@", error);
+//                }];
+
+
             }
             
     
@@ -299,6 +327,11 @@
     }
     return result;
 }
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    _currentField =textField;
+    return YES;
+}
 - (void) textFieldDidEndEditing:(UITextField *)textField {
 
 NSIndexPath *indexPath = [self.profileTableView indexPathForCell:(WOContactTableViewCell*)[[textField superview] superview]]; // this should return you your current indexPath
@@ -351,6 +384,9 @@ if (indexPath.section == 0) {
 */
 
 - (IBAction)logoutAction:(UIButton *)sender {
+    AppDelegate* appdelegateObj = (AppDelegate*)[[UIApplication sharedApplication]delegate];
+    self.isupdateProfile=appdelegateObj.isupdateProfile =NO;
+
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
@@ -428,12 +464,12 @@ if (indexPath.section == 0) {
             
             NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                                     API_KEY,@"client_key",
-                                    @"", @"username",
                                     @"fffff",@"device_id",
-                                    [self.appdelegateObj.userObj.userid empty] ,@"user_id",
+                                   [self.appdelegateObj.userObj.userid empty],@"user_id",
                                     [self.appdelegateObj.userObj.userEmail empty],@"email",
                                     [self.appdelegateObj.userObj.fullName empty],@"first_name",
                                     @"",@"last_name",
+                                    [self.appdelegateObj.userObj.passWord empty],@"password",
                                     [self.appdelegateObj.userObj.phoneNo empty],@"mobile_no",
                                     @"",@"home_no",
                                     @"", @"office_no",
@@ -442,7 +478,7 @@ if (indexPath.section == 0) {
                                     [self.appdelegateObj.userObj.homeAddressState empty],@"home_address_state",
                                     [self.appdelegateObj.userObj.homeAddress2 empty], @"home_address_city",
                                     [self.appdelegateObj.userObj.officeAdressState empty],@"office_address_state",
-                                    [self.appdelegateObj.userObj.officeAddress2 empty], @"home_address_city",
+                                    [self.appdelegateObj.userObj.officeAddress2 empty], @"office_address_city",
                                     @"",@"home_address_zip",
                                     @"",@"emergency_contact",
                                     @"", @"profile_photo_path",
@@ -451,7 +487,6 @@ if (indexPath.section == 0) {
                                     @"",@"MNC",
                                     @"",  @"MCC",
                                     @"", @"os_version",
-                                    
                                     nil];
             
             [httpClient postPath:@"" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -463,7 +498,7 @@ if (indexPath.section == 0) {
                 
                 NSLog(@"LOGIN_SYNC = %@", json);
                 
-                if ([[[json objectForKey:@"status"]valueForKey:@"code"]integerValue]==500) {
+                if ([[[json objectForKey:@"status"]valueForKey:@"code"]integerValue]==506) {
                     
                     NSString *userid =[NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"user_id"]];
                     CGImageRef cgref = [self.appdelegateObj.userObj.profileImage CGImage];
@@ -570,7 +605,7 @@ if (indexPath.section == 0) {
                                     [self.appdelegateObj.userObj.homeAddressState empty],@"home_address_state",
                                     [self.appdelegateObj.userObj.homeAddress2 empty], @"home_address_city",
                                     [self.appdelegateObj.userObj.officeAdressState empty],@"office_address_state",
-                                    [self.appdelegateObj.userObj.officeAddress2 empty], @"home_address_city",
+                                    [self.appdelegateObj.userObj.officeAddress2 empty], @"office_address_city",
                                     @"",@"home_address_zip",
                                     @"",@"emergency_contact",
                                     @"", @"profile_photo_path",
@@ -596,6 +631,7 @@ if (indexPath.section == 0) {
                     CGImageRef cgref = [self.appdelegateObj.userObj.profileImage CGImage];
                     CIImage *cim = [self.appdelegateObj.userObj.profileImage CIImage];
                     _isupdateProfile=YES;
+                    self.appdelegateObj.isupdateProfile=YES;
                     if (cim == nil && cgref == NULL)
                     {
                         [hud removeFromSuperview];

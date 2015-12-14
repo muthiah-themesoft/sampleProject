@@ -20,7 +20,7 @@
 }
 
 -(NSString *) empty{
-    if (([[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]length] == 0)) {
+    if (self.length==0) {
         return @"";
     }
     return self;

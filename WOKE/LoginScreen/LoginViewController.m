@@ -243,14 +243,13 @@
              appdelegateObj.userObj.phoneNo =   [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"mobile_no"]];
 
                appdelegateObj.userObj.officeAddress1 = [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"office_address"]];
-
-
+   appdelegateObj.userObj.officeAddress2 = [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"office_address_city"]];
+                   appdelegateObj.userObj.officeAdressState = [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"office_address_state"]];
               appdelegateObj.userObj.profilePath = [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"profile_photo_path"]];
                 ;
                appdelegateObj.userObj.userid = [NSString stringWithFormat:@"%@",[[json objectForKey:@"user_info"]valueForKey:@"user_id"]];
 
-               
-
+                appdelegateObj.userObj.passWord =password;
                 
                 
                 [self performSegueWithIdentifier:@"sucessLogin" sender:nil];

@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>WOKE copy.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>WOKE.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -23,6 +28,11 @@
 			<true/>
 		</dict>
 		<key>B90D8B5B1BB9C2240090741E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B9EDB72A1C1F154500A77E34</key>
 		<dict>
 			<key>primary</key>
 			<true/>
