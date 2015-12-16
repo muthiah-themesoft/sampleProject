@@ -212,7 +212,7 @@
                   moduleName = "WOKE"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dheenadayalanselvaraj/Desktop/WOKE_current_source/WOKE/ProfileScreen/WOProfileViewController.m"
-                  timestampString = "471808467.064134"
+                  timestampString = "471814202.281677"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "619"
@@ -227,7 +227,7 @@
                   moduleName = "WOKE"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dheenadayalanselvaraj/Desktop/WOKE_current_source/WOKE/ProfileScreen/WOProfileViewController.m"
-                  timestampString = "471808467.064332"
+                  timestampString = "471814202.281874"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "619"
@@ -324,7 +324,7 @@
                   moduleName = "WOKE"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dheenadayalanselvaraj/Desktop/WOKE_current_source/WOKE/ProfileScreen/WOProfileViewController.m"
-                  timestampString = "471808467.068189"
+                  timestampString = "471814202.287507"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "492"
@@ -339,7 +339,7 @@
                   moduleName = "WOKE"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dheenadayalanselvaraj/Desktop/WOKE_current_source/WOKE/ProfileScreen/WOProfileViewController.m"
-                  timestampString = "471808467.068378"
+                  timestampString = "471814202.287864"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "492"
@@ -442,6 +442,70 @@
             startingLineNumber = "206"
             endingLineNumber = "206"
             landmarkName = "-tableView:cellForRowAtIndexPath:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WOKE/TableViewCell/WOMapTableViewCell.h"
+            timestampString = "471809378.519914"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "12"
+            endingLineNumber = "12"
+            landmarkName = "filterLabel"
+            landmarkType = "19">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[WOMapTableViewCell filterLabel]"
+                  moduleName = "WOKE"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dheenadayalanselvaraj/Desktop/WOKE_current_source/WOKE/TableViewCell/WOMapTableViewCell.h"
+                  timestampString = "471814202.298383"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "12"
+                  endingLineNumber = "12"
+                  offsetFromSymbolStart = "16">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[WOMapTableViewCell setFilterLabel:]"
+                  moduleName = "WOKE"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dheenadayalanselvaraj/Desktop/WOKE_current_source/WOKE/TableViewCell/WOMapTableViewCell.h"
+                  timestampString = "471814202.2986"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "20">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WOKE/MapView/WOMapViewController.m"
+            timestampString = "471814202.133396"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
+            landmarkName = "-tableView:numberOfRowsInSection:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -21,9 +21,6 @@
     [super viewDidLoad];
     _myData = [[NSMutableArray alloc]initWithObjects:
               @"Data 1 in array",@"Data 2 in array",@"Data 3 in array",nil];
-    [_filterTableView registerClass:[WOMapTableViewCell class] forCellReuseIdentifier:@"filterCell"];
-    static NSString *cellIdentifier = @"filterCell";
-    WOMapTableViewCell *footerCell = [_filterTableView dequeueReusableCellWithIdentifier:cellIdentifier];
 
     // Do any additional setup after loading the view.
 }
@@ -43,11 +40,16 @@
 }
 
  - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
- WOMapTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"filterCell" forIndexPath:indexPath];
- 
- // Configure the cell...
- 
- return cell;
+     static NSString *CellIdentifier = @"filterCell";
+     WOMapTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+     if (cell != nil)
+     {
+         cell = [[WOMapTableViewCell alloc]
+                 initWithStyle: UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+     }
+     
+     [[cell filterLabel] setText: [_myData objectAtIndex:indexPath.row]];
+     return cell;
  }
 
 
